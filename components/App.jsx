@@ -1,0 +1,21 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {HashRouter as Router, Switch, Route, browserHistory} from 'react-router-dom'
+
+import {GroupListing} from './GroupListing.jsx';
+import {FundListing} from './FundListing.jsx';
+
+class App extends React.Component {
+  render() {
+    return (
+       <Router history={browserHistory}>
+        <Switch>
+          <Route path="/" exact component={GroupListing} />
+          <Route path="/:name" component={FundListing} />
+        </Switch>
+      </Router>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById('fiskelReactApp'));

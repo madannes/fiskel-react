@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/react-table@6.8/react-table.css">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>fiskel - easy investment tracking</header>
+  <main id="fiskelReactApp">
+    <h1 class="loading">Loading...</h1>
+  </main>
+  <script src="https://jspm.io/system.js"></script>
+  <script src="systemjs.config.js"></script>
+  <script type="text/javascript">
+    const WEEKLY_URL = "https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&datatype=csv&apikey=ZL45";
+
+    async function getGroupsWithQuotesAsync(groupName) {
+      let groups = await fetch("groups.json").then(response => response.json());
+      let group = null;
+
+      if (groups && groups.length > 0)
+        group = groups.find(g => g.name === groupName);
+
+      if (group && group.funds) {
+        for (let i = 0; i < group.funds.length; i++) {
+          let fund = group.funds[i];
+          let url = `${WEEKLY_URL}&symbol=${fund.symbol}`;
+          let csv = await fetch(url).then(response => response.text());
+          //fund.quotes = filterQuotes(json["Time Series (Daily)"]);
+        }
+      }
+
+      return group;
+    }
+
+    const DAYS_FROM_MILLISECONDS = 1000 * 60 * 60 * 24;
+    const NOW = new Date();
+    const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+    const daysPast = [-7, -21, -42, -90, -182, -365]; // 1wk, 3wk, 6wk, 3mo, 6mo, 12mo
+
+    function filterQuotes(quoteListObject) {
+      const dateKeys = Object.keys(quoteListObject);
+      const thisYearsDateKeys = dateKeys.slice(0, 375);
+      const indexedQuotes = thisYearsDateKeys.map(dt => {
+        return {
+          date: dt,
+          daysOld: Math.floor((TODAY - Date.parse(dt)) / DAYS_FROM_MILLISECONDS),
+          quote: parseFloat(quoteListObject[dt]["5. adjusted close"])
+        };
+      });
+      const latestQuote = indexedQuotes[0];
+      let filtered = []
+      filtered.push(indexedQuotes.find(q => q.daysOld === (latestQuote.daysOld + 7)))
+      filtered.push(indexedQuotes.find(q => q.daysOld === (latestQuote.daysOld + 21)))
+      filtered.push(indexedQuotes.find(q => q.daysOld === (latestQuote.daysOld + 42)))
+      filtered.push(indexedQuotes.find(q => q.daysOld === (latestQuote.daysOld + 90)))
+      filtered.push(indexedQuotes.find(q => q.daysOld === (latestQuote.daysOld + 180)))
+      console.log(filtered);
+      
+    }
+
+    System.import('./components/App.jsx');
+  </script>
+</body>
+
+</html>
