@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HashRouter as Router, Switch, Route, browserHistory} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route, browserHistory} from 'react-router-dom'
 
 import {GroupListing} from './GroupListing.jsx';
 import {FundListing} from './FundListing.jsx';
