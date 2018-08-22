@@ -2,6 +2,9 @@
 <html>
 
 <head>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/react-table@6.8/react-table.css">
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -11,12 +14,7 @@
   <main id="fiskelReactApp">
     <h1 class="loading">Loading...</h1>
   </main>
-  <!-- <script src="https://jspm.io/system.js"></script>
-  <script src="systemjs.config.js"></script> -->
-  
-<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-
-  <script type="text/babel">
+  <script type="text/javascript">
     const WEEKLY_URL = "https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY_ADJUSTED&datatype=csv&apikey=ZL45";
 
     async function getGroupsWithQuotesAsync(groupName) {
@@ -61,12 +59,12 @@
       filtered.push(indexedQuotes.find(q => q.daysOld === (latestQuote.daysOld + 90)))
       filtered.push(indexedQuotes.find(q => q.daysOld === (latestQuote.daysOld + 180)))
       console.log(filtered);
-      
+
     }
 
     // System.import('./components/App.jsx');
   </script>
-  <script type="text/babel" src="./components/App.jsx"></script>
+  <script type="text/javascript" src="components/App.js"></script>
 </body>
 
 </html>
