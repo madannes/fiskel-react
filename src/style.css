@@ -1,0 +1,32 @@
+.loader {
+  animation: spin 1.5s linear infinite;
+  border: 1px solid #480;
+  border-top-color: transparent;
+  border-radius: 50%;
+  display: block;
+  height: 18px;
+  width: 18px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-link {
+  padding: 0;
+}
+
+.btn-link:not(:first) {
+  padding-left: 1em;
+}
+
+#quoteTable > thead th:nth-child(n+2),
+#quoteTable > tbody td:nth-child(n+2) {
+  text-align: center;
+}
+
+#quoteTable > tbody td small {
+  display: block;
+  font-size: 6pt;
+}
