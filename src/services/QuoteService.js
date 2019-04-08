@@ -1,5 +1,3 @@
-import FundModel from '../models/FundModel'
-
 class QuoteService {
   constructor() {
     this.quoteUrl = 'https://www.alphavantage.co/query?apikey=ZL45&function=TIME_SERIES_WEEKLY_ADJUSTED'
