@@ -3,49 +3,35 @@ class QuoteService {
     this.quoteUrl = 'https://www.alphavantage.co/query?apikey=ZL45&function=TIME_SERIES_WEEKLY_ADJUSTED'
   }
 
-  getWeeklyQuotes = (symbols, forceRefresh, success, error) => {
-    // chain together synchronous promises to limit API calls to 5x min (free tier)
-    // https://stackoverflow.com/a/40329190
-    // this would be MUCH easier and cleaner if stackblitz enabled async & await
-    for (let i = 0, p = Promise.resolve(); i < symbols.length; i++) {
-      p = p.then(_ => new Promise(resolve => {
-        const symbol = symbols[i]
+  async getWeeklyQuotes(symbol, forceRefresh) {
+    // first check to see if we have valid cached quotes for the symbol
+    const cacheKey = `fiskel_${symbol}`
+    const cached = JSON.parse(localStorage.getItem(cacheKey))
+    if (!forceRefresh && cached && cached.expiry > new Date()) {
+      console.log(`Returning quotes for ${symbol} from cache`)
+      return cached.quotes
+    }
 
-        // first check the cache
-        const cacheKey = `fiskel_${symbol}`
-        const cached = JSON.parse(localStorage.getItem(cacheKey))
-        if (!forceRefresh && cached && cached.expiry > new Date()) {
-          console.log(`Returning quotes for ${symbol} from cache`)
-          success(symbol, cached.quotes)
-          resolve() // resolve iteration immediately since we didn't hit API
-        }
-        else {
-          // if not in cache or expired, query API
-          console.log(`Querying API for ${symbol}...`)
-          fetch(`${this.quoteUrl}&symbol=${symbol}`)
-            .then(response => response.json())
-            .then(json => {
-              // map the quotes
-              const quotes = this.mapWeeklyQuotes(json)
+    // if not in cache or cache is expired, we have to query API
+    console.log(`Querying API for ${symbol}...`)
+    const response = await fetch(`${this.quoteUrl}&symbol=${symbol}`)
+    const json = await response.json()
 
-              // cache the model so we don't hit API again for 4hrs
-              let now = new Date()
-              localStorage.setItem(cacheKey, JSON.stringify({ quotes, expiry: now.setHours(now.getHours() + 4) }))
-              console.log(`Cached ${quotes.length} quotes for ${symbol}`)
+    // map the JSON (very ugly) to our quote models
+    const quotes = this.mapWeeklyQuotes(json)
 
-              // fire the callback
-              success(symbol, quotes)
+    // cache the quote models so we don't hit API needlessly
+    let now = new Date()
+    localStorage.setItem(cacheKey, JSON.stringify({
+      quotes,
+      expiry: now.setHours(now.getHours() + 8)
+    }))
+    console.log(`Cached ${quotes.length} quotes for ${symbol}`)
 
-              // wait 12sec before resolving to limit API calls to 5x min
-              setTimeout(resolve, 12000)
-            })
-            .catch(err => {
-              console.error(err)
-              error(symbol, err)
-            })
-        } // end else
-      })) // end Promise
-    } // end for
+    // delay 12sec to allow max 5 API requests per minute (free rate limit)
+    await new Promise(resolve => setTimeout(resolve, 12000))
+
+    return quotes
   } // end function
 
   mapWeeklyQuotes(json) {
@@ -53,7 +39,10 @@ class QuoteService {
     const dates = Object.keys(weeklyQuotes).slice(0, 53)
     return dates.map(dt => {
       const price = weeklyQuotes[dt]['5. adjusted close']
-      return { date: new Date(dt), price: parseFloat(price) }
+      return {
+        date: new Date(dt),
+        price: parseFloat(price)
+      }
     })
   }
 }
