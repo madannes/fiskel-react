@@ -38,8 +38,9 @@ class GroupDetail extends Component {
   // quotesErroredHandler = (symbol, error) => this.updateFundModelInState(new FundModel(symbol, [], error))
 
   // map funds in state to a new array, copying in new quotes for the specified symbol
-  mapToNew = fund => fund.symbol === this.symbol ? { ...fund, quotes: this.quotes } : fund
-
+  mapToNew(fund) {
+    return fund.symbol === this.symbol ? new FundModel(this.symbol, this.quotes) : fund
+  }
   render() {
     return (
       <Fragment>
