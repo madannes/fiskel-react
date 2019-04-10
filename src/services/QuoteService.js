@@ -7,6 +7,7 @@ class QuoteService {
     // first check to see if we have valid cached quotes for the symbol
     const cacheKey = `fiskel_${symbol}`
     const cached = JSON.parse(localStorage.getItem(cacheKey))
+
     if (!forceRefresh && cached && cached.expiry > new Date()) {
       console.log(`Returning quotes for ${symbol} from cache`)
       return cached.quotes
@@ -28,8 +29,8 @@ class QuoteService {
     }))
     console.log(`Cached ${quotes.length} quotes for ${symbol}`)
 
-    // delay 12sec to allow max 5 API requests per minute (free rate limit)
-    await new Promise(resolve => setTimeout(resolve, 12000))
+    // delay 11.5sec to allow ~5 API requests per minute (free rate limit)
+    await new Promise(resolve => setTimeout(resolve, 11500))
 
     return quotes
   } // end function

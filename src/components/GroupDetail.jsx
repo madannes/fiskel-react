@@ -23,21 +23,22 @@ class GroupDetail extends Component {
   }
 
   loadQuotes = async forceRefresh => {
-    // create an array of symbols to iterate since state.funds will change during loop
-    const symbols = this.state.funds.map(f => f.symbol)
-    await symbols.forEach(async symbol => {
+    // create an array of symbols to process sequentially
+    const symbolQueue = this.state.funds.map(f => f.symbol)
+    let symbol = symbolQueue.shift()
+    while (symbol) {
       const quotes = await this.quoteService.getWeeklyQuotes(symbol, forceRefresh)
-      const updatedFunds = this.state.funds.map(fund => {
-        if (fund.symbol !== symbol)
-          return fund
-
-        // otherwise, map everything over and copy in the quotes
-        return { ...fund, quotes }
-      })
+      const contextForMap = { symbol, quotes }
+      const updatedFunds = this.state.funds.map(this.mapToNew, contextForMap)
       this.setState({ funds: updatedFunds })
-    })
+      symbol = symbolQueue.shift()
+    }
   }
+
   // quotesErroredHandler = (symbol, error) => this.updateFundModelInState(new FundModel(symbol, [], error))
+
+  // map funds in state to a new array, copying in new quotes for the specified symbol
+  mapToNew = fund => fund.symbol === this.symbol ? { ...fund, quotes: this.quotes } : fund
 
   render() {
     return (
