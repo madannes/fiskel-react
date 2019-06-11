@@ -6,8 +6,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.7.0",
     "react-router": "^4.3.1",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.8"
+    "react-router-dom": "^4.3.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -17,7 +16,7 @@
     "deploy": "mv build/index.html build/200.html && surge build/ --domain fiskel.surge.sh"
   },
   "devDependencies": {
-    "react-scripts": "latest"
+    "react-scripts": "^3.0.1"
   },
   "browserslist": [
     ">0.2%",
