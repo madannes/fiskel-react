@@ -45,8 +45,10 @@ class GroupDetail extends Component {
     return (
       <Fragment>
         <h1>{this.state.groupName}</h1>
-        <Link to="/" className="btn btn-link">Back to Groups</Link>
-        <button className="btn btn-link" onClick={() => this.loadQuotes(true)}>Refresh Quotes</button>
+        <nav className='actions'>
+          <Link to="/" className="btn btn-link">Back to Groups</Link>
+          <button className="btn btn-link" onClick={() => this.loadQuotes(true)}>Refresh Quotes</button>
+        </nav>
         <table id="quoteTable" className="table table-hover table-sm">
           <thead>
             <tr>
@@ -61,7 +63,7 @@ class GroupDetail extends Component {
               <tr key={f.symbol} className='quoteRow'>
                 <td>
                   {f.symbol}
-                  {f.current && <small>{f.current.date} - ${f.current.price.toFixed(2)}</small>}
+                  {f.current && <small>{f.current.date} ${f.current.price.toFixed(2)}</small>}
                 </td>
                 <td>{f.description}</td>
                 {WEEKS.map(wk => {
@@ -72,7 +74,7 @@ class GroupDetail extends Component {
                       cellMarkup = (
                         <Fragment>
                           {quote.value.toFixed(1)}
-                          <small>{quote.date} - ${quote.price.toFixed(2)}</small>
+                          <small>{quote.date} ${quote.price.toFixed(2)}</small>
                         </Fragment>
                       )
                     else
