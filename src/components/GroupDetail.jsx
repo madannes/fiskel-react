@@ -61,7 +61,7 @@ class GroupDetail extends Component {
               <tr key={f.symbol} className='quoteRow'>
                 <td>
                   {f.symbol}
-                  {f.current && <small>{f.current.date.toString()} - ${f.current.price.toFixed(2)}</small>}
+                  {f.current && <small>{f.current.date} - ${f.current.price.toFixed(2)}</small>}
                 </td>
                 <td>{f.description}</td>
                 {WEEKS.map(wk => {
@@ -72,7 +72,7 @@ class GroupDetail extends Component {
                       cellMarkup = (
                         <Fragment>
                           {quote.value.toFixed(1)}
-                          <small>{quote.date.toString()} - ${quote.price.toFixed(2)}</small>
+                          <small>{quote.date} - ${quote.price.toFixed(2)}</small>
                         </Fragment>
                       )
                     else

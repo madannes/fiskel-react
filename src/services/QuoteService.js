@@ -38,10 +38,10 @@ class QuoteService {
   mapWeeklyQuotes(json) {
     const weeklyQuotes = json['Weekly Adjusted Time Series']
     const dates = Object.keys(weeklyQuotes).slice(0, 53)
-    return dates.map(dt => {
-      const price = weeklyQuotes[dt]['5. adjusted close']
+    return dates.map(date => {
+      const price = weeklyQuotes[date]['5. adjusted close']
       return {
-        date: new Date(dt),
+        date,
         price: parseFloat(price)
       }
     })
