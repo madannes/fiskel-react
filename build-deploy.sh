@@ -1,0 +1,1 @@
+npm react-scripts build && surge /build fiskel.surge.sh
