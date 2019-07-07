@@ -1,17 +1,20 @@
-import React, { Fragment } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import GroupListing from './components/GroupListing'
 import GroupDetail from './components/GroupDetail'
 
 import './App.css'
 
 const App = () => (
-  <Router>
-    <Fragment>
-      <Route path="/" exact component={GroupListing} />
-      <Route path="/group/:name" component={GroupDetail} />
-    </Fragment>
-  </Router>
+  <>
+    <Router>
+      <Switch>
+        <Route path="/" exact component={GroupListing} />
+        <Route path="/group/:name" component={GroupDetail} />
+      </Switch>
+    </Router>
+    <footer>{process.env.REACT_APP_VERSION}</footer>
+  </>
 )
 
 export default App
