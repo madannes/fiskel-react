@@ -26,7 +26,7 @@ export default class FundModel {
 
       // calculate the percent increase or decrease per week based on latest price
       for (let wk in quotes)
-        quotes[wk].value = (this.current.price / quotes[wk].price * 100) - 100
+        quotes[wk].value = (quotes[wk].price - this.current.price) / this.current.price * 100
 
       // sum up the percentages for the specified weeks to get the momentum
       this.momentum = quotes[3].value + quotes[6].value + quotes[12].value + quotes[26].value
