@@ -1,29 +1,49 @@
-const fetch = require('node-fetch')
+const fetch = require("node-fetch")
 
-const getQuotes = async ticker => {
-  const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`)
+const getQuotes = async (ticker) => {
+  const response = await fetch(`https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`)
 
-  let result = { ticker, prices: [] }
+  let result = {
+    ticker,
+    prices: {
+      current: null,
+      oneWeek: null,
+      threeWeek: null,
+      sixWeek: null,
+      threeMonth: null,
+      sixMonth: null,
+      twelveMonth: null,
+    },
+  }
   try {
     const json = await response.json()
     const data = json.chart.result[0]
-    quotes = data.indicators.quote[0].close
+    const quotes = data.indicators.quote[0].close
+    const currentQuoteDate = new Date(data.timestamp[0] * 1000)
 
-    for (let idx = quotes.length - 1; idx >= 0; idx--) {
+    for (let idx = 0; idx < quotes.length; idx++) {
       const closingDate = new Date(data.timestamp[idx] * 1000)
-      result.prices.push({ closingDate, price: data.indicators.adjclose ? data.indicators.adjclose[0].adjclose[idx] : quotes[idx].close })
+      const closingPrice = data.indicators.adjclose ? data.indicators.adjclose[0].adjclose[idx] : quotes[idx].close
+      const daysPastCurrent = Math.round(closingDate - currentQuoteDate)
+      const formattedValue = `${closingDate.toISOString().slice(0, 10)}@${closingPrice.toFixed(2)}`
+      if (idx === 0) result.prices.current = formattedValue
+      else if (daysPastCurrent > 7 && !result.prices.oneWeek) result.prices.oneWeek = formattedValue
+      else if (daysPastCurrent > 21 && !result.prices.threeWeek) result.prices.threeWeek = formattedValue
+      else if (daysPastCurrent > 42 && !result.prices.sixWeek) result.prices.sixWeek = formattedValue
+      else if (daysPastCurrent > 91 && !result.prices.threeMonth) result.prices.threeMonth = formattedValue
+      else if (daysPastCurrent > 182 && !result.prices.sixMonth) result.prices.sixMonth = formattedValue
+      else if (idx === quotes.length - 1) result.prices.twelveMonth = formattedValue
     }
+
+    /*
+    loop thru days looking for 1w, 3w, 6w, 3mo, 6mo, 12mo
+
+    */
   } catch (err) {
     console.error(`Unable to load quotes for ${ticker}: ${err}`)
   }
 
-  console.log(`***** ${ticker} *****`)
   console.log(JSON.stringify(result, null, 2))
-  // for (let idx = 0; idx < closingDates.length; idx++) {
-  //   const closingDate = closingDates[idx]
-  //   const closingPrice = closingPrices[idx]
-  //   console.log(idx, closingDate, closingPrice)
-  // }
 }
 
-getQuotes('GLD')
+getQuotes("GLD")
