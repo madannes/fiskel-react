@@ -1,7 +1,7 @@
 const fetch = require("node-fetch")
 
 const getQuotes = async (ticker) => {
-  const response = await fetch(`https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`)
+  const response = await fetch(`https://query2.finance.yahoo.com/v8/finance/chart/GLD?interval=1d&range=1y`).then(r => r.json().then(console.log))
 
   let result = {
     ticker,
@@ -25,7 +25,7 @@ const getQuotes = async (ticker) => {
       const closingDate = new Date(data.timestamp[idx] * 1000)
       const closingPrice = data.indicators.adjclose ? data.indicators.adjclose[0].adjclose[idx] : quotes[idx].close
       const daysPastCurrent = Math.round(closingDate - currentQuoteDate)
-      const formattedValue = `${closingDate.toISOString().slice(0, 10)}@${closingPrice.toFixed(2)}`
+      const formattedValue = { date: closingDate.toISOString().slice(0, 10), price: closingPrice.toFixed(2) }
       if (idx === 0) result.prices.current = formattedValue
       else if (daysPastCurrent > 7 && !result.prices.oneWeek) result.prices.oneWeek = formattedValue
       else if (daysPastCurrent > 21 && !result.prices.threeWeek) result.prices.threeWeek = formattedValue
@@ -41,4 +41,4 @@ const getQuotes = async (ticker) => {
   console.log(JSON.stringify(result, null, 2))
 }
 
-getQuotes("GLD")
+// getQuotes("MSFT")
