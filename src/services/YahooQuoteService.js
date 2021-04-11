@@ -34,11 +34,6 @@ const getQuotes = async (ticker) => {
       else if (daysPastCurrent > 182 && !result.prices.sixMonth) result.prices.sixMonth = formattedValue
       else if (idx === quotes.length - 1) result.prices.twelveMonth = formattedValue
     }
-
-    /*
-    loop thru days looking for 1w, 3w, 6w, 3mo, 6mo, 12mo
-
-    */
   } catch (err) {
     console.error(`Unable to load quotes for ${ticker}: ${err}`)
   }
