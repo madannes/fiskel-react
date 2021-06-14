@@ -1,6 +1,14 @@
 import getQuotes from "./services/YahooQuoteService.mjs"
 import daa from "./data/daa.mjs"
 
-for (let item of daa) {
-  getQuotes(item.symbol)
-}
+let csvData = null
+
+
+const quotes = getQuotes('GLD')
+console.log(quotes.prices)
+// Object.entries(quotes.prices).forEach(console.log)
+
+// for (let item of daa) {
+//   const quotes = getQuotes(item.symbol)
+//   console.log(quotes)
+// }
