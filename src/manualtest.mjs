@@ -4,8 +4,8 @@ import daa from "./data/daa.mjs"
 let csvData = null
 
 
-const quotes = getQuotes('GLD')
-console.log(quotes.prices)
+const quotes = await getQuotes('GLD')
+console.log(quotes)
 // Object.entries(quotes.prices).forEach(console.log)
 
 // for (let item of daa) {
