@@ -37,7 +37,6 @@ const getQuotes = async (ticker) => {
         close: formatPrice(data.indicators.quote[0].close[idx]),
         adjusted: data.indicators.adjclose ? formatPrice(data.indicators.adjclose[0].adjclose[idx]) : null,
       }
-      console.log(formatted)
       if (daysPast <= 7 && !result.prices.oneWeek) result.prices.oneWeek = formatted
       else if (daysPast <= 21 && !result.prices.threeWeek) result.prices.threeWeek = formatted
       else if (daysPast <= 42 && !result.prices.sixWeek) result.prices.sixWeek = formatted
