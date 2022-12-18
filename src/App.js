@@ -13,7 +13,7 @@ const App = () => (
         <Route path="/group/:name" component={GroupDetail} />
       </Switch>
     </Router>
-    <footer>{process.env.REACT_APP_VERSION}</footer>
+    <footer>{process.env.REACT_APP_VERSION} ({process.env.REACT_APP_COMMIT})</footer>
   </>
 )
 
